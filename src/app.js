@@ -11,6 +11,10 @@ const authRoutes = require('./routes/authRoutes');
 
 app.use('/api/auth', authRoutes);
 
+const eventoRoutes = require('./routes/eventoRoutes');
+
+app.use('/api/eventos', eventoRoutes);
+
 // rota de teste
 app.get('/', (req, res) => {
     res.send('API rodando');
