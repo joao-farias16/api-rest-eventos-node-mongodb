@@ -7,6 +7,10 @@ const connectDB = require('./config/db');
 
 app.use(express.json());
 
+const authRoutes = require('./routes/authRoutes');
+
+app.use('/api/auth', authRoutes);
+
 // rota de teste
 app.get('/', (req, res) => {
     res.send('API rodando');
