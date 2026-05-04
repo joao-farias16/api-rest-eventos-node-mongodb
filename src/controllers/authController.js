@@ -64,3 +64,55 @@ exports.login = async (req, res) => {
         res.status(500).json({ msg: 'Erro no servidor' });
     }
 };
+
+// ALTERAR SENHA (usuário logado)
+exports.changePassword = async (req, res) => {
+    try {
+        const { senhaAtual, novaSenha } = req.body;
+
+        if (!senhaAtual || !novaSenha) {
+            return res.status(400).json({ msg: 'Preencha todos os campos' });
+        }
+
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({ msg: 'Usuário não encontrado' });
+        }
+
+        const senhaCorreta = await bcrypt.compare(senhaAtual, user.senha);
+        if (!senhaCorreta) {
+            return res.status(400).json({ msg: 'Senha atual incorreta' });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        user.senha = await bcrypt.hash(novaSenha, salt);
+
+        await user.save();
+
+        res.json({ msg: 'Senha atualizada com sucesso' });
+    } catch (error) {
+        res.status(500).json({ msg: 'Erro no servidor' });
+    }
+};
+
+exports.resetPassword = async (req, res) => {
+    try {
+        const { email, novaSenha } = req.body;
+
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({ msg: 'Usuário não encontrado' });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        user.senha = await bcrypt.hash(novaSenha, salt);
+
+        await user.save();
+
+        res.json({ msg: 'Senha redefinida com sucesso' });
+
+    } catch (error) {
+        res.status(500).json({ msg: 'Erro no servidor' });
+    }
+};

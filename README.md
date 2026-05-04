@@ -1,57 +1,88 @@
-API REST - Sistema de Eventos
+API REST - Sistema de Gestão de Eventos
 
 Descrição
 
-Essa API foi feita com Node.js, Express e MongoDB (Atlas) para gerenciar eventos com autenticação de usuários.
+Projeto desenvolvido com Node.js, Express e MongoDB (Atlas) para gerenciamento de eventos com autenticação de usuários e interface web simples.
 
-Ela permite:
+O sistema permite:
 
-cadastrar usuário
-fazer login (gera um token)
-criar eventos
-listar eventos
-atualizar e deletar eventos
+* Cadastro de usuários
+* Login com autenticação via token (JWT)
+* Recuperação de senha (via email informado)
+* Criação de eventos
+* Listagem de eventos (todos os usuários veem todos)
+* Edição e exclusão de eventos (somente pelo criador)
+* Interface web para interação com o sistema
 
-Tecnologias usadas
+---
 
-Node.js
-Express
-MongoDB Atlas
-Mongoose
-JWT
-Bcrypt
-Nodemon
+Tecnologias utilizadas
+
+* Node.js
+* Express
+* MongoDB Atlas
+* Mongoose
+* JWT (autenticação)
+* Bcrypt (criptografia de senha)
+* EJS (views)
+* JavaScript (frontend)
+
+---
 
 Como rodar o projeto
 
-Instalar as dependências:
+1. Instalar as dependências
+
+```bash
 npm install
+```
 
-Esse comando já instala tudo que está no package.json.
+---
 
-Rodar o servidor:
+2. Configuração
+
+O projeto utiliza variáveis de ambiente para conexão com o banco de dados.
+
+---
+
+3. Executar o servidor
+
+```bash
 npm run dev
+```
 
-Servidor vai rodar em:
+Servidor rodando em:
+
 http://localhost:3000
 
-Configuração
+---
 
-O projeto usa variáveis de ambiente para conectar com o banco de dados.
+Acesso às páginas
+
+* Login: http://localhost:3000/login
+* Registro: http://localhost:3000/register
+* Eventos: http://localhost:3000/eventos
+* Recuperar senha: http://localhost:3000/forgot-password
+
+---
 
 Autenticação
 
-Cadastrar usuário:
+Cadastro:
 
 POST http://localhost:3000/api/auth/register
 
 Body:
 
+```json
 {
   "nome": "Seu Nome",
-  "email": "seu@email.com",
+  "email": "email@email.com",
   "senha": "123456"
 }
+```
+
+---
 
 Login:
 
@@ -59,87 +90,94 @@ POST http://localhost:3000/api/auth/login
 
 Body:
 
+```json
 {
-  "email": "seu@email.com",
+  "email": "email@email.com",
   "senha": "123456"
 }
+```
 
 Resposta:
 
+```json
 {
-  "token": "seu_token_aqui"
+  "token": "TOKEN_AQUI"
 }
+```
 
-Esse token vai ser usado nas rotas protegidas.
+O token é utilizado automaticamente pelo frontend para acessar rotas protegidas.
 
-Eventos
+---
 
-Criar evento (precisa de token):
+Recuperação de senha
 
-POST http://localhost:3000/api/eventos
-
-Header:
-
-Authorization: Bearer SEU_TOKEN
+PUT http://localhost:3000/api/auth/reset-password
 
 Body:
 
+```json
 {
-  "titulo": "Evento Teste",
-  "data": "2026-05-10",
-  "descricao": "Descrição do evento"
+  "email": "email@email.com",
+  "novaSenha": "nova123"
 }
+```
 
-Se não mandar o token certo, vai dar erro 401 (não autorizado).
+---
+
+Eventos
+
+Criar evento (rota protegida):
+
+POST http://localhost:3000/api/eventos
+
+---
 
 Listar eventos:
 
 GET http://localhost:3000/api/eventos
 
-Atualizar evento:
+Todos os usuários podem visualizar os eventos.
+
+---
+
+Atualizar evento (somente criador):
 
 PUT http://localhost:3000/api/eventos/:id
 
-Header:
+---
 
-Authorization: Bearer SEU_TOKEN
-
-Deletar evento:
+Deletar evento (somente criador):
 
 DELETE http://localhost:3000/api/eventos/:id
 
-Header:
+---
 
-Authorization: Bearer SEU_TOKEN
+Regras do sistema
 
-Como testar
+* Todos os usuários podem visualizar todos os eventos
+* Apenas o usuário que criou o evento pode editar ou excluir
+* Senhas são armazenadas de forma criptografada
+* Autenticação baseada em JWT
 
-Pode usar Postman ou Talend.
-
-Passo a passo:
-
-cria um usuário
-faz login
-copia o token
-usa o token pra criar eventos
-
-Observações
-
-O token tem que ser enviado assim:
-Authorization: Bearer TOKEN
-Só quem criou o evento pode editar ou deletar
-Banco usado: MongoDB Atlas
+---
 
 Estrutura do projeto
 
+```
 src/
-controllers/
-models/
-routes/
-middlewares/
-config/
-app.js
+  controllers/
+  models/
+  routes/
+  middlewares/
+  config/
+  views/
+  public/
+  app.js
+```
 
-Para iniciar o servidor:
+---
 
-npm run dev
+Observações
+
+* A funcionalidade de recuperação de senha foi implementada de forma simplificada (sem envio de email)
+* O projeto possui interface web para facilitar testes e demonstração

@@ -15,7 +15,18 @@ const eventoRoutes = require('./routes/eventoRoutes');
 
 app.use('/api/eventos', eventoRoutes);
 
-// rota de teste
+const path = require('path');
+
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/login', (req, res) => res.render('login'));
+app.get('/register', (req, res) => res.render('register'));
+app.get('/eventos', (req, res) => res.render('eventos'));
+app.get('/forgot-password', (req, res) => res.render('forgot-password'));
+
 app.get('/', (req, res) => {
     res.send('API rodando');
 });
