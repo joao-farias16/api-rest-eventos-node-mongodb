@@ -6,18 +6,26 @@
 </head>
 <body>
 
-<div class="container">
-    <h2>Eventos</h2>
+<div class="page">
 
-    <input id="titulo" placeholder="Título">
-    <input id="data" type="date" placeholder="Data">
-    <input id="descricao" placeholder="Descrição">
+    <div class="container">
+        <h2>Criar / Editar Evento</h2>
 
-    <button id="btnSalvar" onclick="salvarEvento()">Criar</button>
+        <input id="titulo" placeholder="Título">
+        <input id="data" type="date">
+        <input id="descricao" placeholder="Descrição">
 
-    <ul id="lista"></ul>
+        <button id="btnSalvar" onclick="salvarEvento()">Criar</button>
+    </div>
 
-    <button onclick="logout()">Logout</button>
+    <div class="container">
+        <h2>Lista de Eventos</h2>
+
+        <ul id="lista"></ul>
+    </div>
+
+    <button class="logout-btn" onclick="logout()">Logout</button>
+
 </div>
 
 <script src="/js/eventos.js"></script>
