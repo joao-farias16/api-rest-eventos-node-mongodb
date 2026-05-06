@@ -42,15 +42,31 @@ async function carregarEventos() {
 
         if (criadorId === userId) {
             botoes = `
-                <button onclick="prepararEdicao('${e._id}', '${e.titulo}', '${e.descricao}')">Editar</button>
+                <button onclick="prepararEdicao('${e._id}', '${e.titulo}', '${e.descricao}', '${e.data}')">Editar</button>
                 <button onclick="deletarEvento('${e._id}')">Deletar</button>
             `;
         }
 
+        const dataFormatada = e.data
+            ? e.data.split('T')[0].split('-').reverse().join('/')
+            : 'Sem data';
+
         li.innerHTML = `
-            <strong>${e.titulo}</strong><br>
-            ${e.descricao}<br>
-            ${botoes}
+            <div class="evento-header">
+                <strong>${e.titulo}</strong>
+
+                <span class="evento-data">
+                    ${dataFormatada}
+                </span>
+            </div>
+
+            <p class="evento-descricao">
+                ${e.descricao}
+            </p>
+
+            <div class="evento-botoes">
+                ${botoes}
+            </div>
         `;
 
         lista.appendChild(li);
@@ -73,7 +89,7 @@ async function salvarEvento() {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + getToken()
             },
-            body: JSON.stringify({ titulo, descricao })
+            body: JSON.stringify({ titulo, data, descricao })
         });
 
         editandoId = null;
@@ -95,9 +111,10 @@ async function salvarEvento() {
 }
 
 // PREPARA EDIÇÃO
-function prepararEdicao(id, titulo, descricao) {
+function prepararEdicao(id, titulo, descricao, data) {
     document.getElementById('titulo').value = titulo;
     document.getElementById('descricao').value = descricao;
+    document.getElementById('data').value = data ? data.split('T')[0] : '';
 
     editandoId = id;
 
