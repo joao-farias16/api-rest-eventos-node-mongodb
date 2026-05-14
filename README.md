@@ -1,3 +1,4 @@
+````md
 API REST - Sistema de Gestão de Eventos
 
 Descrição
@@ -35,7 +36,7 @@ Como rodar o projeto
 
 ```bash
 npm install
-```
+````
 
 ---
 
@@ -53,16 +54,16 @@ npm run dev
 
 Servidor rodando em:
 
-http://localhost:3000
+[http://localhost:3000](http://localhost:3000)
 
 ---
 
 Acesso às páginas
 
-* Login: http://localhost:3000/login
-* Registro: http://localhost:3000/register
-* Eventos: http://localhost:3000/eventos
-* Recuperar senha: http://localhost:3000/forgot-password
+* Login: [http://localhost:3000/login](http://localhost:3000/login)
+* Registro: [http://localhost:3000/register](http://localhost:3000/register)
+* Eventos: [http://localhost:3000/eventos](http://localhost:3000/eventos)
+* Recuperar senha: [http://localhost:3000/forgot-password](http://localhost:3000/forgot-password)
 
 ---
 
@@ -70,7 +71,7 @@ Autenticação
 
 Cadastro:
 
-POST http://localhost:3000/api/auth/register
+POST [http://localhost:3000/api/auth/register](http://localhost:3000/api/auth/register)
 
 Body:
 
@@ -86,7 +87,7 @@ Body:
 
 Login:
 
-POST http://localhost:3000/api/auth/login
+POST [http://localhost:3000/api/auth/login](http://localhost:3000/api/auth/login)
 
 Body:
 
@@ -105,13 +106,13 @@ Resposta:
 }
 ```
 
-O token é utilizado automaticamente pelo frontend para acessar rotas protegidas.
+Guarde o token retornado, ele será utilizado nas rotas protegidas.
 
 ---
 
 Recuperação de senha
 
-PUT http://localhost:3000/api/auth/reset-password
+PUT [http://localhost:3000/api/auth/reset-password](http://localhost:3000/api/auth/reset-password)
 
 Body:
 
@@ -128,27 +129,101 @@ Eventos
 
 Criar evento (rota protegida):
 
-POST http://localhost:3000/api/eventos
+POST [http://localhost:3000/api/eventos](http://localhost:3000/api/eventos)
+
+Header obrigatório:
+
+```plaintext
+Authorization: Bearer SEU_TOKEN
+```
+
+Exemplo:
+
+```plaintext
+Authorization: Bearer eyJhbGciOi...
+```
+
+Body:
+
+```json
+{
+  "titulo": "Feira de Tecnologia",
+  "data": "2026-08-22",
+  "descricao": "Evento sobre tecnologia e programação"
+}
+```
+
+Se o token não for enviado corretamente a API retornará:
+
+```plaintext
+401 - Acesso negado
+```
 
 ---
 
 Listar eventos:
 
-GET http://localhost:3000/api/eventos
+GET [http://localhost:3000/api/eventos](http://localhost:3000/api/eventos)
 
-Todos os usuários podem visualizar os eventos.
+Todos os usuários podem visualizar todos os eventos cadastrados.
+
+Essa rota não necessita autenticação.
 
 ---
 
 Atualizar evento (somente criador):
 
-PUT http://localhost:3000/api/eventos/:id
+PUT [http://localhost:3000/api/eventos/:id](http://localhost:3000/api/eventos/:id)
+
+Header obrigatório:
+
+```plaintext
+Authorization: Bearer SEU_TOKEN
+```
+
+Body:
+
+```json
+{
+  "titulo": "Evento atualizado",
+  "data": "2026-09-15",
+  "descricao": "Descrição atualizada"
+}
+```
+
+Somente o usuário criador pode editar.
 
 ---
 
 Deletar evento (somente criador):
 
-DELETE http://localhost:3000/api/eventos/:id
+DELETE [http://localhost:3000/api/eventos/:id](http://localhost:3000/api/eventos/:id)
+
+Header obrigatório:
+
+```plaintext
+Authorization: Bearer SEU_TOKEN
+```
+
+Somente o usuário criador pode excluir.
+
+---
+
+Fluxo recomendado para testes no Postman / Thunder Client / Talend
+
+1. Criar uma conta
+
+2. Fazer login
+
+3. Copiar o token retornado
+
+4. Inserir o token no Header:
+
+```plaintext
+Authorization: Bearer SEU_TOKEN
+```
+
+5. Criar, editar ou excluir eventos normalmente
 
 ---
 
@@ -163,7 +238,7 @@ Regras do sistema
 
 Estrutura do projeto
 
-```
+```plaintext
 src/
   controllers/
   models/
@@ -181,3 +256,6 @@ Observações
 
 * A funcionalidade de recuperação de senha foi implementada de forma simplificada (sem envio de email)
 * O projeto possui interface web para facilitar testes e demonstração
+
+```
+```
