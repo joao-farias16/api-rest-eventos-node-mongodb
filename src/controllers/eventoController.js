@@ -76,3 +76,23 @@ exports.deletarEvento = async (req, res) => {
         res.status(500).json({ msg: 'Erro ao deletar evento' });
     }
 };
+
+// BUSCAR EVENTO
+exports.buscarEventoPorId = async (req, res) => {
+    try {
+        const evento = await Evento.findById(req.params.id);
+
+        if (!evento) {
+            return res.status(404).json({
+                msg: 'Evento não encontrado'
+            });
+        }
+
+        res.json(evento);
+
+    } catch (error) {
+        res.status(500).json({
+            msg: 'Erro ao buscar evento'
+        });
+    }
+};
