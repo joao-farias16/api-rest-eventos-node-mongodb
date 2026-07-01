@@ -1,32 +1,28 @@
-require('dotenv').config();
+require("dotenv").config();
 
-const express = require('express');
+const express = require("express");
+const path = require("path");
+
 const app = express();
 
-const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('./config/swagger');
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./config/swagger");
 
-const connectDB = require('./config/db');
+const { connectDB } = require("./config/db");
+
+// Rotas
+const authRoutes = require("./routes/authRoutes");
+const apiRoutes = require("./routes/apiRoutes");
+const categoriaRoutes = require("./routes/categoriaRoutes");
+const produtoRoutes = require("./routes/produtoRoutes");
+const clienteRoutes = require("./routes/clienteRoutes");
+const pedidoRoutes = require("./routes/pedidoRoutes");
 
 app.use(express.json());
 
-const authRoutes = require('./routes/authRoutes');
-
-app.use('/api/auth', authRoutes);
-
-const eventoRoutes = require('./routes/eventoRoutes');
-
-app.use('/api/eventos', eventoRoutes);
-
-const path = require('path');
-
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
-app.use(express.static(path.join(__dirname, 'public')));
-
+// Swagger
 app.use(
-    '/api-docs',
+    "/api-docs",
     swaggerUi.serve,
     swaggerUi.setup(swaggerSpec, {
         swaggerOptions: {
@@ -35,13 +31,22 @@ app.use(
     })
 );
 
-app.get('/login', (req, res) => res.render('login'));
-app.get('/register', (req, res) => res.render('register'));
-app.get('/eventos', (req, res) => res.render('eventos'));
-app.get('/forgot-password', (req, res) => res.render('forgot-password'));
+// Views (se quiser manter)
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+app.use(express.static(path.join(__dirname, "public")));
 
-app.get('/', (req, res) => {
-    res.send('API rodando');
+// Rotas da API
+app.use("/api", apiRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/categorias", categoriaRoutes);
+app.use("/api/produtos", produtoRoutes);
+app.use("/api/clientes", clienteRoutes);
+app.use("/api/pedidos", pedidoRoutes);
+
+// Página inicial
+app.get("/", (req, res) => {
+    res.send("API Loja 2.0 rodando");
 });
 
 const PORT = process.env.PORT || 3000;
@@ -49,11 +54,12 @@ const PORT = process.env.PORT || 3000;
 async function startServer() {
     try {
         await connectDB();
+
         app.listen(PORT, () => {
             console.log(`Servidor rodando na porta ${PORT}`);
         });
     } catch (error) {
-        console.error('Erro ao iniciar servidor:', error);
+        console.error("Erro ao iniciar servidor:", error);
         process.exit(1);
     }
 }

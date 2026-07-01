@@ -1,42 +1,62 @@
-# API REST - Sistema de Gestão de Eventos
+# API REST - Sistema de Gestão de Loja
 
 ## Descrição
 
-Projeto desenvolvido com Node.js, Express e MongoDB (Atlas) para gerenciamento de eventos com autenticação de usuários e interface web simples.
+Projeto desenvolvido com **Node.js**, **Express** e **MySQL** para gerenciamento de uma loja através de uma API REST.
 
-O sistema permite:
+A aplicação possui autenticação utilizando **JWT**, documentação interativa com **Swagger/OpenAPI** e permite o gerenciamento completo das seguintes entidades:
 
-* Cadastro de usuários
-* Login com autenticação via token (JWT)
-* Recuperação de senha (via email informado)
-* Criação de eventos
-* Listagem de eventos (todos os usuários veem todos)
-* Busca de eventos por ID
-* Edição e exclusão de eventos (somente pelo criador)
-* Interface web para interação com o sistema
-* Documentação interativa da API utilizando Swagger/OpenAPI
+- Usuários
+- Categorias
+- Produtos
+- Clientes
+- Pedidos
+
+Além disso, a API possui uma rota pública de monitoramento para verificação do status da aplicação.
 
 ---
 
-## Tecnologias utilizadas
+# Tecnologias utilizadas
 
-* Node.js
-* Express
-* MongoDB Atlas
-* Mongoose
-* JWT (autenticação)
-* Bcrypt (criptografia de senha)
-* EJS (views)
-* JavaScript (frontend)
-* Swagger UI
-* Swagger JSDoc
-* OpenAPI 3.0
+- Node.js
+- Express
+- MySQL
+- mysql2
+- JWT (JSON Web Token)
+- bcryptjs
+- dotenv
+- Swagger UI
+- Swagger JSDoc
+- OpenAPI 3.0
+- EJS
 
 ---
 
-## Como rodar o projeto
+# Pré-requisitos
 
-### 1. Instalar as dependências
+Antes de executar o projeto é necessário possuir instalado:
+
+- Node.js
+- MySQL Server
+- MySQL Workbench (opcional, porém recomendado)
+
+---
+
+# Instalação
+
+Clone o repositório:
+
+```bash
+git clone URL_DO_REPOSITORIO
+```
+
+Entre na pasta do projeto:
+
+```bash
+cd NOME_DO_PROJETO
+```
+
+Instale as dependências:
 
 ```bash
 npm install
@@ -44,62 +64,132 @@ npm install
 
 ---
 
-### 2. Configuração
+# Configuração do Banco de Dados
 
-O projeto utiliza variáveis de ambiente para conexão com o banco de dados.
+Crie um banco chamado:
+
+```sql
+CREATE DATABASE loja;
+```
+
+Depois execute o script:
+
+```
+loja.sql
+```
+
+Esse script irá criar todas as tabelas necessárias.
 
 ---
 
-### 3. Executar o servidor
+# Configuração das variáveis de ambiente
+
+Crie um arquivo chamado:
+
+```
+.env
+```
+
+Utilize a seguinte configuração:
+
+```env
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=SUA_SENHA
+DB_NAME=loja
+
+JWT_SECRET=SUA_CHAVE_SECRETA
+
+PORT=3000
+```
+
+---
+
+# Executando o projeto
+
+Execute:
 
 ```bash
 npm run dev
 ```
 
-Servidor rodando em:
+Se tudo estiver correto aparecerá:
 
+```
+MySQL conectado
+Servidor rodando na porta 3000
+```
+
+---
+
+# Endereços importantes
+
+API:
+
+```
 http://localhost:3000
+```
 
----
+Swagger:
 
-## Acesso às páginas
+```
+http://localhost:3000/api-docs
+```
 
-* Login: http://localhost:3000/login
-* Registro: http://localhost:3000/register
-* Eventos: http://localhost:3000/eventos
-* Recuperar senha: http://localhost:3000/forgot-password
-* Documentação Swagger: http://localhost:3000/api-docs
+Status da API:
 
----
+```
+GET /api/status
+```
 
-## Autenticação
-
-### Cadastro
-
-**POST** `/api/auth/register`
-
-Body:
+Resposta:
 
 ```json
 {
-  "nome": "Seu Nome",
-  "email": "email@email.com",
-  "senha": "123456"
+    "versao":"2.0.0",
+    "status":"online"
 }
 ```
 
 ---
 
-### Login
+# Fluxo completo para testar a API
 
-**POST** `/api/auth/login`
+## 1. Registrar usuário
+
+Execute:
+
+```
+POST /api/auth/register
+```
 
 Body:
 
 ```json
 {
-  "email": "email@email.com",
-  "senha": "123456"
+    "nome":"Administrador",
+    "email":"admin@email.com",
+    "senha":"123456"
+}
+```
+
+---
+
+## 2. Fazer Login
+
+Execute:
+
+```
+POST /api/auth/login
+```
+
+Body:
+
+```json
+{
+    "email":"admin@email.com",
+    "senha":"123456"
 }
 ```
 
@@ -107,216 +197,276 @@ Resposta:
 
 ```json
 {
-  "token": "TOKEN_AQUI"
+    "token":"TOKEN",
+    "usuario":{
+        "id":1,
+        "nome":"Administrador",
+        "email":"admin@email.com"
+    }
 }
 ```
 
-Guarde o token retornado, ele será utilizado nas rotas protegidas.
+Guarde:
+
+- token
+- id do usuário
+
+Eles serão utilizados em todas as rotas protegidas.
 
 ---
 
-### Recuperação de senha
+## 3. Autorizar o Swagger
 
-**PUT** `/api/auth/reset-password`
+Clique em:
 
-Body:
-
-```json
-{
-  "email": "email@email.com",
-  "novaSenha": "nova123"
-}
+```
+Authorize
 ```
 
----
+Informe:
 
-## Eventos
-
-### Criar evento (rota protegida)
-
-**POST** `/api/eventos`
-
-Header obrigatório:
-
-```plaintext
-Authorization: Bearer SEU_TOKEN
 ```
-
-Exemplo:
-
-```plaintext
-Authorization: Bearer eyJhbGciOi...
-```
-
-Body:
-
-```json
-{
-  "titulo": "Feira de Tecnologia",
-  "data": "2026-08-22",
-  "descricao": "Evento sobre tecnologia e programação"
-}
-```
-
-Se o token não for enviado corretamente a API retornará:
-
-```plaintext
-401 - Acesso negado
-```
-
----
-
-### Listar eventos
-
-**GET** `/api/eventos`
-
-Todos os usuários podem visualizar todos os eventos cadastrados.
-
-Essa rota não necessita autenticação.
-
----
-
-### Buscar evento por ID
-
-**GET** `/api/eventos/:id`
-
-Exemplo:
-
-```plaintext
-GET /api/eventos/ID_DO_EVENTO
-```
-
-Retorna os dados completos do evento informado.
-
----
-
-### Atualizar evento (somente criador)
-
-**PUT** `/api/eventos/:id`
-
-Header obrigatório:
-
-```plaintext
-Authorization: Bearer SEU_TOKEN
-```
-
-Body:
-
-```json
-{
-  "titulo": "Evento atualizado",
-  "data": "2026-09-15",
-  "descricao": "Descrição atualizada"
-}
-```
-
-Somente o usuário criador pode editar.
-
----
-
-### Deletar evento (somente criador)
-
-**DELETE** `/api/eventos/:id`
-
-Header obrigatório:
-
-```plaintext
-Authorization: Bearer SEU_TOKEN
-```
-
-Somente o usuário criador pode excluir.
-
----
-
-## Documentação Swagger
-
-A API possui documentação interativa gerada com Swagger/OpenAPI.
-
-Acesse:
-
-```plaintext
-http://localhost:3000/api-docs
-```
-
-Através da interface é possível:
-
-* Visualizar todos os endpoints
-* Testar requisições diretamente pelo navegador
-* Enviar dados JSON
-* Visualizar respostas da API
-* Verificar códigos de status HTTP
-* Utilizar autenticação JWT através do botão "Authorize"
-
----
-
-## Fluxo recomendado para testes via Swagger
-
-1. Acesse:
-
-```plaintext
-http://localhost:3000/api-docs
-```
-
-2. Crie uma conta utilizando:
-
-```plaintext
-POST /api/auth/register
-```
-
-3. Faça login utilizando:
-
-```plaintext
-POST /api/auth/login
-```
-
-4. Copie o token JWT retornado
-
-5. Clique no botão **Authorize** no topo da página
-
-6. Informe:
-
-```plaintext
 Bearer SEU_TOKEN
 ```
 
-7. Clique em **Authorize**
+Clique em:
 
-8. Utilize normalmente os endpoints protegidos através do botão **Try it out**
-
-O Swagger enviará automaticamente o token para todas as rotas protegidas.
-
----
-
-## Regras do sistema
-
-* Todos os usuários podem visualizar todos os eventos
-* Apenas o usuário que criou o evento pode editar ou excluir
-* Senhas são armazenadas de forma criptografada
-* Autenticação baseada em JWT
-* Endpoints protegidos exigem token válido
+```
+Authorize
+```
 
 ---
 
-## Estrutura do projeto
+## 4. Informar o x-user-id
 
-```plaintext
+Todas as rotas protegidas exigem também o header:
+
+```
+x-user-id
+```
+
+Informe exatamente o ID retornado no login.
+
+Exemplo:
+
+```
+x-user-id: 1
+```
+
+---
+
+# Ordem recomendada para testes
+
+Como existem relacionamentos entre as tabelas, recomenda-se utilizar a seguinte sequência.
+
+## Categorias
+
+Criar categoria:
+
+```
+POST /api/categorias
+```
+
+```json
+{
+    "nome":"Informática"
+}
+```
+
+---
+
+## Produtos
+
+Antes de cadastrar um produto, deve existir uma categoria.
+
+Exemplo:
+
+```
+POST /api/produtos
+```
+
+```json
+{
+    "nome":"Notebook",
+    "valor":3500,
+    "estoque":15,
+    "categorias_id_categoria":1
+}
+```
+
+---
+
+## Clientes
+
+```
+POST /api/clientes
+```
+
+```json
+{
+    "nome":"João Silva",
+    "telefone":"51999999999",
+    "status":1
+}
+```
+
+---
+
+## Pedidos
+
+Antes de cadastrar um pedido é necessário existir:
+
+- Cliente
+- Produto
+
+Exemplo:
+
+```
+POST /api/pedidos
+```
+
+```json
+{
+    "data":"2026-07-01",
+    "clientes_id_cliente":1,
+    "produtos":[
+        {
+            "produtos_id_produto":1,
+            "quantidade":2,
+            "valor":3500
+        }
+    ]
+}
+```
+
+---
+
+# Endpoints disponíveis
+
+## API
+
+| Método | Endpoint |
+|---------|----------|
+| GET | /api/status |
+
+---
+
+## Autenticação
+
+| Método | Endpoint |
+|---------|----------|
+| POST | /api/auth/register |
+| POST | /api/auth/login |
+| PUT | /api/auth/change-password |
+| PUT | /api/auth/reset-password |
+
+---
+
+## Categorias
+
+| Método | Endpoint |
+|---------|----------|
+| GET | /api/categorias |
+| GET | /api/categorias/{id} |
+| POST | /api/categorias |
+| PUT | /api/categorias/{id} |
+| DELETE | /api/categorias/{id} |
+
+---
+
+## Produtos
+
+| Método | Endpoint |
+|---------|----------|
+| GET | /api/produtos |
+| GET | /api/produtos/{id} |
+| POST | /api/produtos |
+| PUT | /api/produtos/{id} |
+| DELETE | /api/produtos/{id} |
+
+---
+
+## Clientes
+
+| Método | Endpoint |
+|---------|----------|
+| GET | /api/clientes |
+| GET | /api/clientes/{id} |
+| POST | /api/clientes |
+| PUT | /api/clientes/{id} |
+| DELETE | /api/clientes/{id} |
+
+---
+
+## Pedidos
+
+| Método | Endpoint |
+|---------|----------|
+| GET | /api/pedidos |
+| GET | /api/pedidos/{id} |
+| POST | /api/pedidos |
+| PUT | /api/pedidos/{id} |
+| DELETE | /api/pedidos/{id} |
+
+---
+
+# Segurança
+
+A API utiliza autenticação baseada em JWT.
+
+Todas as rotas protegidas exigem:
+
+- Token JWT válido
+- Header `x-user-id` correspondente ao usuário autenticado
+
+Caso essas informações não sejam enviadas corretamente a API retornará:
+
+```
+401 Unauthorized
+```
+
+ou
+
+```
+403 Forbidden
+```
+
+---
+
+# Estrutura do projeto
+
+```
 src/
 ├── config/
 ├── controllers/
 ├── middlewares/
 ├── models/
 ├── routes/
-├── views/
 ├── public/
+├── views/
 ├── app.js
-└── swagger.js
 ```
 
 ---
 
-## Observações
+# Documentação
 
-* A funcionalidade de recuperação de senha foi implementada de forma simplificada (sem envio de email)
-* O projeto possui interface web para facilitar testes e demonstração
-* A documentação interativa da API foi implementada utilizando Swagger/OpenAPI
-* Todas as rotas podem ser testadas diretamente pela interface disponível em `/api-docs`
+Toda a documentação pode ser acessada através do Swagger:
+
+```
+http://localhost:3000/api-docs
+```
+
+Através dele é possível:
+
+- visualizar todos os endpoints;
+- testar requisições;
+- enviar JSON;
+- utilizar autenticação JWT;
+- consultar respostas e códigos HTTP.
+
+---
+
+# Autor
+
+Projeto desenvolvido para fins acadêmicos na disciplina de Desenvolvimento de APIs REST.

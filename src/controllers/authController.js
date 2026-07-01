@@ -1,118 +1,199 @@
-const User = require('../models/User');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
+const usuarioModel = require("../models/usuarioModel");
 
 // REGISTRO
 exports.register = async (req, res) => {
     try {
         const { nome, email, senha } = req.body;
 
-        // validação básica
         if (!nome || !email || !senha) {
-            return res.status(400).json({ msg: 'Preencha todos os campos' });
+            return res.status(400).json({
+                msg: "Preencha todos os campos"
+            });
         }
 
-        // verifica se já existe
-        const userExistente = await User.findOne({ email });
-        if (userExistente) {
-            return res.status(400).json({ msg: 'Usuário já existe' });
+        const usuario = await usuarioModel.buscarPorEmail(email);
+
+        if (usuario) {
+            return res.status(400).json({
+                msg: "Usuário já existe"
+            });
         }
 
-        // criptografar senha
-        const salt = await bcrypt.genSalt(10);
-        const senhaHash = await bcrypt.hash(senha, salt);
+        const senhaHash = await bcrypt.hash(senha, 10);
 
-        const novoUser = new User({
+        const id = await usuarioModel.criar(
             nome,
             email,
-            senha: senhaHash
+            senhaHash
+        );
+
+        res.status(201).json({
+            msg: "Usuário criado com sucesso",
+            id
         });
 
-        await novoUser.save();
-
-        res.status(201).json({ msg: 'Usuário criado com sucesso' });
-
     } catch (error) {
-        res.status(500).json({ msg: 'Erro no servidor' });
+        console.error(error);
+
+        res.status(500).json({
+            msg: "Erro no servidor"
+        });
     }
 };
 
 // LOGIN
 exports.login = async (req, res) => {
     try {
+
         const { email, senha } = req.body;
 
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(400).json({ msg: 'Usuário não encontrado' });
+        const usuario = await usuarioModel.buscarPorEmail(email);
+
+        if (!usuario) {
+            return res.status(401).json({
+                msg: "Usuário não encontrado"
+            });
         }
 
-        const senhaCorreta = await bcrypt.compare(senha, user.senha);
+        const senhaCorreta = await bcrypt.compare(
+            senha,
+            usuario.senha
+        );
+
         if (!senhaCorreta) {
-            return res.status(400).json({ msg: 'Senha inválida' });
+            return res.status(401).json({
+                msg: "Senha inválida"
+            });
         }
 
         const token = jwt.sign(
-            { id: user._id },
+            {
+                id: usuario.id
+            },
             process.env.JWT_SECRET,
-            { expiresIn: '1d' }
+            {
+                expiresIn: "1d"
+            }
         );
 
-        res.json({ token });
+        res.json({
+            token,
+            usuario: {
+                id: usuario.id,
+                nome: usuario.nome,
+                email: usuario.email
+            }
+        });
 
     } catch (error) {
-        res.status(500).json({ msg: 'Erro no servidor' });
+
+        console.error(error);
+
+        res.status(500).json({
+            msg: "Erro no servidor"
+        });
+
     }
 };
 
-// ALTERAR SENHA (usuário logado)
+// ALTERAR SENHA
 exports.changePassword = async (req, res) => {
+
     try {
+
         const { senhaAtual, novaSenha } = req.body;
 
-        if (!senhaAtual || !novaSenha) {
-            return res.status(400).json({ msg: 'Preencha todos os campos' });
+        const usuario = await usuarioModel.buscarPorId(req.user.id);
+
+        if (!usuario) {
+
+            return res.status(404).json({
+                msg: "Usuário não encontrado"
+            });
+
         }
 
-        const user = await User.findById(req.user.id);
-        if (!user) {
-            return res.status(404).json({ msg: 'Usuário não encontrado' });
-        }
+        const senhaCorreta = await bcrypt.compare(
+            senhaAtual,
+            usuario.senha
+        );
 
-        const senhaCorreta = await bcrypt.compare(senhaAtual, user.senha);
         if (!senhaCorreta) {
-            return res.status(400).json({ msg: 'Senha atual incorreta' });
+
+            return res.status(400).json({
+                msg: "Senha atual incorreta"
+            });
+
         }
 
-        const salt = await bcrypt.genSalt(10);
-        user.senha = await bcrypt.hash(novaSenha, salt);
+        const senhaHash = await bcrypt.hash(
+            novaSenha,
+            10
+        );
 
-        await user.save();
+        await usuarioModel.alterarSenha(
+            usuario.id,
+            senhaHash
+        );
 
-        res.json({ msg: 'Senha atualizada com sucesso' });
+        res.json({
+            msg: "Senha alterada com sucesso"
+        });
+
     } catch (error) {
-        res.status(500).json({ msg: 'Erro no servidor' });
+
+        console.error(error);
+
+        res.status(500).json({
+            msg: "Erro no servidor"
+        });
+
     }
+
 };
 
+// RESET SENHA
 exports.resetPassword = async (req, res) => {
+
     try {
+
         const { email, novaSenha } = req.body;
 
-        const user = await User.findOne({ email });
+        const usuario = await usuarioModel.buscarPorEmail(email);
 
-        if (!user) {
-            return res.status(404).json({ msg: 'Usuário não encontrado' });
+        if (!usuario) {
+
+            return res.status(404).json({
+                msg: "Usuário não encontrado"
+            });
+
         }
 
-        const salt = await bcrypt.genSalt(10);
-        user.senha = await bcrypt.hash(novaSenha, salt);
+        const senhaHash = await bcrypt.hash(
+            novaSenha,
+            10
+        );
 
-        await user.save();
+        await usuarioModel.alterarSenha(
+            usuario.id,
+            senhaHash
+        );
 
-        res.json({ msg: 'Senha redefinida com sucesso' });
+        res.json({
+            msg: "Senha redefinida com sucesso"
+        });
 
     } catch (error) {
-        res.status(500).json({ msg: 'Erro no servidor' });
+
+        console.error(error);
+
+        res.status(500).json({
+            msg: "Erro no servidor"
+        });
+
     }
+
 };
