@@ -1,21 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
+
 <head>
-    <title>Registro</title>
+    <meta charset="UTF-8">
+    <title>Cadastrar Usuário</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
+
 <body>
 
 <div class="auth-container">
-    <h2>Registro</h2>
+
+    <div class="auth-header">
+        <h1>Loja</h1>
+        <p>Painel Administrativo</p>
+    </div>
+
+    <h2>Cadastrar Usuário</h2>
 
     <input id="nome" placeholder="Nome">
-    <input id="email" placeholder="Email">
+
+    <input id="email" type="email" placeholder="E-mail">
+
     <input id="senha" type="password" placeholder="Senha">
 
-    <button onclick="register()">Registrar</button>
+    <button onclick="register()">Cadastrar</button>
 
-    <p><a href="/login">Voltar</a></p>
+    <div class="auth-links">
+        <a href="/login">Já possui uma conta? Entrar</a>
+        <a href="/forgot-password">Esqueceu sua senha?</a>
+    </div>
+
 </div>
 
 <script src="/js/auth.js"></script>

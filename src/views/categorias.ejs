@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Categorias</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <h2>Loja</h2>
+            <span>Painel Administrativo</span>
+        </div>
+
+        <nav>
+
+            <a href="/dashboard">
+                Dashboard
+            </a>
+
+            <a href="/categorias" class="active">
+                Categorias
+            </a>
+
+            <a href="/produtos">
+                Produtos
+            </a>
+
+            <a href="/clientes">
+                Clientes
+            </a>
+
+            <a href="/pedidos">
+                Pedidos
+            </a>
+
+        </nav>
+
+        <button class="logout" onclick="logout()">
+            Sair
+        </button>
+
+    </aside>
+
+    <main class="content">
+
+        <header class="content-header">
+
+            <h1>Categorias</h1>
+
+            <p>
+                Gerencie as categorias cadastradas.
+            </p>
+
+        </header>
+
+        <div class="form">
+
+            <input
+                type="text"
+                id="nome"
+                placeholder="Nome da categoria"
+            >
+
+            <button onclick="salvarCategoria()">
+                Salvar
+            </button>
+
+        </div>
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Nome</th>
+
+                        <th width="180">
+                            Ações
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="listaCategorias">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script src="/js/categorias.js"></script>
+
+</body>
+
+</html>

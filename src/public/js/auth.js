@@ -5,11 +5,20 @@ async function register() {
     const email = document.getElementById('email').value;
     const senha = document.getElementById('senha').value;
 
-    await fetch(`${API}/register`, {
+    const res = await fetch(`${API}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nome, email, senha })
     });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+        alert(data.msg);
+        return;
+    }
+
+    alert(data.msg);
 
     window.location.href = '/login';
 }
@@ -32,5 +41,7 @@ async function login() {
     }
 
     localStorage.setItem('token', data.token);
-    window.location.href = '/eventos';
+    localStorage.setItem("userId", data.usuario.id);
+
+    window.location.href = "/dashboard";
 }

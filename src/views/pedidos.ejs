@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Pedidos</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <h2>Loja</h2>
+            <span>Painel Administrativo</span>
+        </div>
+
+        <nav>
+
+            <a href="/dashboard">
+                Dashboard
+            </a>
+
+            <a href="/categorias">
+                Categorias
+            </a>
+
+            <a href="/produtos">
+                Produtos
+            </a>
+
+            <a href="/clientes">
+                Clientes
+            </a>
+
+            <a href="/pedidos" class="active">
+                Pedidos
+            </a>
+
+        </nav>
+
+        <button class="logout" onclick="logout()">
+            Sair
+        </button>
+
+    </aside>
+
+    <main class="content">
+
+        <header class="content-header">
+
+            <h1>Novo Pedido</h1>
+
+            <p>
+                Preencha os dados abaixo para registrar um novo pedido.
+            </p>
+
+        </header>
+
+        <div class="form">
+
+            <label>Cliente</label>
+
+            <select id="cliente">
+
+                <option value="">
+                    Selecione um cliente
+                </option>
+
+            </select>
+
+            <label>Data</label>
+
+            <input
+                id="data"
+                type="date"
+            >
+
+            <label>Produto</label>
+
+            <select id="produto">
+
+                <option value="">
+                    Selecione um produto
+                </option>
+
+            </select>
+
+            <label>Quantidade</label>
+
+            <input
+                id="quantidade"
+                type="number"
+                min="1"
+                placeholder="Quantidade"
+            >
+
+            <label>Valor Unitário</label>
+
+            <input
+                id="valor"
+                type="number"
+                step="0.01"
+                placeholder="Valor unitário"
+            >
+
+            <button
+                type="button"
+                onclick="adicionarProduto()">
+
+                Adicionar ao Pedido
+
+            </button>
+
+            <div class="table-container" style="margin-top:30px;">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Cliente</th>
+
+                            <th>Produto</th>
+
+                            <th>Quantidade</th>
+
+                            <th>Valor Unitário</th>
+
+                            <th>Subtotal</th>
+
+                            <th width="170">
+                                Ações
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="listaItens">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <button
+                style="margin-top:25px;"
+                onclick="salvarPedido()">
+
+                Finalizar Pedido
+
+            </button>
+
+        </div>
+
+        <div class="table-container" style="margin-top:30px;">
+
+            <h2 style="margin-bottom:20px;">
+                Pedidos Cadastrados
+            </h2>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Data</th>
+
+                        <th>Cliente</th>
+
+                        <th width="170">
+                            Ações
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="listaPedidos">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script src="/js/pedidos.js"></script>
+
+</body>
+
+</html>

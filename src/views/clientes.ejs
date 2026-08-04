@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Clientes</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <h2>Loja</h2>
+
+            <span>Painel Administrativo</span>
+
+        </div>
+
+        <nav>
+
+            <a href="/dashboard">
+                Dashboard
+            </a>
+
+            <a href="/categorias">
+                Categorias
+            </a>
+
+            <a href="/produtos">
+                Produtos
+            </a>
+
+            <a href="/clientes" class="active">
+                Clientes
+            </a>
+
+            <a href="/pedidos">
+                Pedidos
+            </a>
+
+        </nav>
+
+        <button
+            class="logout"
+            onclick="logout()">
+
+            Sair
+
+        </button>
+
+    </aside>
+
+    <main class="content">
+
+        <header class="content-header">
+
+            <h1>Clientes</h1>
+
+            <p>
+                Gerencie os clientes cadastrados.
+            </p>
+
+        </header>
+
+        <div class="form">
+
+            <input
+                id="nome"
+                type="text"
+                placeholder="Nome do cliente"
+            >
+
+            <input
+                id="telefone"
+                type="text"
+                placeholder="Telefone"
+            >
+
+            <select id="status">
+
+                <option value="">
+                    Selecione o status
+                </option>
+
+                <option value="1">
+                    Ativo
+                </option>
+
+                <option value="0">
+                    Inativo
+                </option>
+
+            </select>
+
+            <button onclick="salvarCliente()">
+                Salvar
+            </button>
+
+        </div>
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Nome</th>
+
+                        <th>Telefone</th>
+
+                        <th>Status</th>
+
+                        <th width="220">
+                            Ações
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="listaClientes">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+</div>
+
+<script src="/js/clientes.js"></script>
+
+</body>
+
+</html>

@@ -1,4 +1,5 @@
 const pedidoModel = require("../models/pedidoModel");
+const produtoModel = require("../models/produtoModel");
 
 exports.listar = async (req, res) => {
     try {
@@ -62,23 +63,65 @@ exports.criar = async (req, res) => {
 
         }
 
+        if (!Array.isArray(produtos) || produtos.length === 0) {
+
+            return res.status(400).json({
+                msg: "Adicione pelo menos um produto."
+            });
+
+        }
+
+        // Verifica o estoque antes de criar o pedido
+        for (const produto of produtos) {
+
+            const produtoBanco =
+                await produtoModel.buscarPorId(
+                    produto.produtos_id_produto
+                );
+
+            if (!produtoBanco) {
+
+                return res.status(404).json({
+                    msg: "Produto não encontrado."
+                });
+
+            }
+
+            if (produto.quantidade > produtoBanco.estoque) {
+
+                return res.status(400).json({
+                    msg: `Estoque insuficiente para ${produtoBanco.nome}. Disponível: ${produtoBanco.estoque}`
+                });
+
+            }
+
+        }
+
+        // Agora cria o pedido
         const idPedido = await pedidoModel.criar(
             data,
             clientes_id_cliente
         );
 
-        if (Array.isArray(produtos)) {
+        // Adiciona os produtos e atualiza o estoque
+        for (const produto of produtos) {
 
-            for (const produto of produtos) {
-
-                await pedidoModel.adicionarProduto(
-                    idPedido,
-                    produto.produtos_id_produto,
-                    produto.quantidade,
-                    produto.valor
+            const produtoBanco =
+                await produtoModel.buscarPorId(
+                    produto.produtos_id_produto
                 );
 
-            }
+            await pedidoModel.adicionarProduto(
+                idPedido,
+                produto.produtos_id_produto,
+                produto.quantidade,
+                produto.valor
+            );
+
+            await produtoModel.atualizarEstoque(
+                produtoBanco.id_produto,
+                produtoBanco.estoque - produto.quantidade
+            );
 
         }
 

@@ -31,10 +31,42 @@ app.use(
     })
 );
 
-// Views (se quiser manter)
+// Views 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
+
+app.get("/login", (req, res) => {
+    res.render("login");
+});
+
+app.get("/register", (req, res) => {
+    res.render("register");
+});
+
+app.get("/forgot-password", (req, res) => {
+    res.render("forgot-password");
+});
+
+app.get("/dashboard", (req, res) => {
+    res.render("dashboard");
+});
+
+app.get("/categorias", (req, res) => {
+    res.render("categorias");
+});
+
+app.get("/produtos", (req, res) => {
+    res.render("produtos");
+});
+
+app.get("/clientes", (req, res) => {
+    res.render("clientes");
+});
+
+app.get("/pedidos", (req, res) => {
+    res.render("pedidos");
+});
 
 // Rotas da API
 app.use("/api", apiRoutes);

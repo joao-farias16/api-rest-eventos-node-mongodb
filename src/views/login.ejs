@@ -1,22 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
+
 <head>
-    <title>Login</title>
+    <meta charset="UTF-8">
+    <title>Entrar</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
+
 <body>
 
 <div class="auth-container">
-    <h2>Login</h2>
 
-    <input id="email" placeholder="Email">
+    <div class="auth-header">
+        <h1>Loja</h1>
+        <p>Painel Administrativo</p>
+    </div>
+
+    <h2>Entrar</h2>
+
+    <input id="email" type="email" placeholder="E-mail">
+
     <input id="senha" type="password" placeholder="Senha">
 
     <button onclick="login()">Entrar</button>
 
-    <p><a href="/register">Criar conta</a></p>
+    <div class="auth-links">
+        <a href="/register">Cadastrar usuário</a>
+        <a href="/forgot-password">Esqueci minha senha</a>
+    </div>
 
-    <p><a href="/forgot-password">Esqueci minha senha</a></p>
 </div>
 
 <script src="/js/auth.js"></script>

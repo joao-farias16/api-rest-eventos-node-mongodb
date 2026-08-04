@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Sistema de Gestão da Loja</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <aside class="sidebar">
+
+            <div class="logo">
+                <h2>Loja</h2>
+                <span>Painel Administrativo</span>
+            </div>
+
+            <nav>
+
+                <a href="/dashboard" class="active">Dashboard</a>
+
+                <a href="/categorias">Categorias</a>
+
+                <a href="/produtos">Produtos</a>
+
+                <a href="/clientes">Clientes</a>
+
+                <a href="/pedidos">Pedidos</a>
+
+            </nav>
+
+            <button class="logout" onclick="logout()">
+                Sair
+            </button>
+
+        </aside>
+
+        <main class="content">
+
+            <header class="content-header">
+
+                <h1>Dashboard</h1>
+
+                <p>
+                    Bem-vindo ao Sistema de Gestão da Loja.
+                    Utilize o menu lateral para acessar os módulos do sistema.
+                </p>
+
+            </header>
+
+            <section class="cards">
+
+                <div class="card">
+                    <h3>Banco de Dados</h3>
+
+                    <p>
+                        🟢 Conectado ao MySQL (Aiven)
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>API REST</h3>
+
+                    <p>
+                        🟢 API em execução
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>Versão</h3>
+
+                    <p>
+                        Sistema 2.0
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>Módulos</h3>
+
+                    <p>
+                        Categorias, Produtos, Clientes e Pedidos.
+                    </p>
+                </div>
+
+            </section>
+
+            <div class="table-container" style="margin-top:35px;">
+
+                <h2 style="margin-bottom:20px;text-align:left;">
+                    Sobre o sistema
+                </h2>
+
+                <p style="line-height:1.8;color:#4b5563;">
+
+                    Este painel permite realizar o gerenciamento completo da loja através
+                    dos módulos disponíveis no menu lateral.
+
+                    <br><br>
+
+                    Utilize as opções de Categorias, Produtos, Clientes e Pedidos para
+                    cadastrar, consultar, editar e remover informações.
+
+                </p>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <script>
+
+        if (!localStorage.getItem("token")) {
+            window.location.href = "/login";
+        }
+
+        function logout() {
+            localStorage.removeItem("token");
+            localStorage.removeItem("userId");
+            window.location.href = "/login";
+        }
+
+    </script>
+
+</body>
+
+</html>

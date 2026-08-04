@@ -50,6 +50,15 @@ async function atualizar(id, nome, valor, estoque, categorias_id_categoria) {
     );
 }
 
+async function atualizarEstoque(id, estoque) {
+    await pool.execute(
+        `UPDATE produtos
+        SET estoque = ?
+        WHERE id_produto = ?`,
+        [estoque, id]
+    );
+}
+
 async function excluir(id) {
     await pool.execute(
         "DELETE FROM produtos WHERE id_produto = ?",
@@ -62,5 +71,6 @@ module.exports = {
     buscarPorId,
     criar,
     atualizar,
+    atualizarEstoque,
     excluir
 };
